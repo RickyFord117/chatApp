@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const index = () => {
+const Page = () => {
   return (
     <View>
-      <Text>index</Text>
+      <Text>FIRST PAGE</Text>
     </View>
   );
 };
 
-export default index;
+export default Page;
