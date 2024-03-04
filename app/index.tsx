@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import { Link } from "expo-router";
 
 import welcomeImage from "@/assets/images/welcome.png";
@@ -7,7 +14,10 @@ import Colors from "@/constants/Colors";
 const welcome_image = Image.resolveAssetSource(welcomeImage).uri;
 
 const Page = () => {
-  const openLink = () => {};
+  const openLink = () => {
+    Linking.openURL("https://galaxies.dev");
+  };
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: welcome_image }} style={styles.welcome} />
@@ -22,7 +32,7 @@ const Page = () => {
           Terms of Service
         </Text>
       </Text>
-      <Link href={"/otp"} asChild>
+      <Link href={"/otp"} replace asChild>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Agree & Continue</Text>
         </TouchableOpacity>
