@@ -88,11 +88,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     gap: 20,
   },
-  loading: {
-    backgroundColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   legal: {
     fontSize: 14,
     textAlign: "center",
