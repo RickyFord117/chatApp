@@ -33,7 +33,7 @@ const Page = () => {
     setTimeout(() => {
       setLoading(false);
       router.push(`/verify/${phoneNumber}`);
-    }, 2000);
+    }, 200);
   };
 
   const trySignIn = async () => {};
