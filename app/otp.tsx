@@ -1,4 +1,3 @@
-import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -10,25 +9,44 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import MaskInput from "react-native-mask-input";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import Colors from "@/constants/Colors";
+import { UK_PHONE } from "@/constants/PhoneMasks";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const router = useRouter();
   const keyboardVerticalOffset = Platform.OS === "ios" ? 90 : 0;
+  const { bottom } = useSafeAreaInsets(); //safe area is good for appropriate boundaries by device
 
   const openLink = () => {
     Linking.openURL("https://galaxies.dev");
   };
 
-  const sendOTP = async () => {};
+  const sendOTP = async () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      router.push(`/verify/${phoneNumber}`);
+    }, 2000);
+  };
 
   const trySignIn = async () => {};
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <View style={styles.container}>
+        {loading && (
+          <View style={styles.loading}>
+            <ActivityIndicator size='large' color={Colors.primary} />
+            <Text style={{ fontSize: 18, padding: 10 }}>Sending code...</Text>
+          </View>
+        )}
         <Text style={styles.description}>
           ChatApp will need to verify your account. Carrier Charges may apply.
         </Text>
@@ -39,6 +57,18 @@ const Page = () => {
             <Ionicons name='chevron-forward' size={20} color={Colors.gray} />
           </View>
           <View style={styles.separator} />
+
+          <MaskInput
+            value={phoneNumber}
+            keyboardType='numeric'
+            autoFocus
+            placeholder='+44'
+            style={styles.input}
+            onChangeText={(masked, unmasked) => {
+              setPhoneNumber(masked); // you can use the unmasked value as well
+            }}
+            mask={UK_PHONE}
+          />
         </View>
 
         <Text style={styles.legal}>
@@ -57,7 +87,11 @@ const Page = () => {
         <View style={{ flex: 1 }} />
 
         <TouchableOpacity
-          style={[styles.button, phoneNumber !== "" ? styles.enabled : null]}
+          style={[
+            styles.button,
+            phoneNumber !== "" ? styles.enabled : null,
+            { marginBottom: bottom },
+          ]}
           disabled={phoneNumber === ""}
           onPress={sendOTP}
         >
@@ -78,6 +112,13 @@ const Page = () => {
 export default Page;
 
 const styles = StyleSheet.create({
+  loading: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 10,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -135,5 +176,12 @@ const styles = StyleSheet.create({
     color: Colors.gray,
     fontSize: 22,
     fontWeight: "500",
+  },
+  input: {
+    backgroundColor: "#fff",
+    width: "100%",
+    fontSize: 16,
+    padding: 6,
+    marginTop: 10,
   },
 });
