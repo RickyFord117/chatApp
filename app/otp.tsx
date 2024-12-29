@@ -10,12 +10,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Colors from "@/constants/Colors";
 import { UK_PHONE } from "@/constants/PhoneMasks";
+import {
+  isClerkAPIResponseError,
+  useSignIn,
+  useSignUp,
+} from "@clerk/clerk-expo";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +29,8 @@ const Page = () => {
   const router = useRouter();
   const keyboardVerticalOffset = Platform.OS === "ios" ? 90 : 0;
   const { bottom } = useSafeAreaInsets(); //safe area is good for appropriate boundaries by device
+  const { signUp, setActive } = useSignUp();
+  const { signIn } = useSignIn();
 
   const openLink = () => {
     Linking.openURL("https://galaxies.dev");
@@ -30,10 +38,26 @@ const Page = () => {
 
   const sendOTP = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await signUp!.create({
+        phoneNumber,
+      });
+
+      signUp!.preparePhoneNumberVerification();
+
       router.push(`/verify/${phoneNumber}`);
-    }, 200);
+    } catch (error) {
+      console.log(error);
+      if (isClerkAPIResponseError(error)) {
+        if (error.errors[0].code === "form_identifier_exists") {
+          console.log("user exists");
+          await trySignIn();
+        } else {
+          setLoading(false);
+          Alert.alert("Error", error.errors[0].message);
+        }
+      }
+    }
   };
 
   const trySignIn = async () => {};
@@ -43,7 +67,7 @@ const Page = () => {
       <View style={styles.container}>
         {loading && (
           <View style={styles.loading}>
-            <ActivityIndicator size='large' color={Colors.primary} />
+            <ActivityIndicator size="large" color={Colors.primary} />
             <Text style={{ fontSize: 18, padding: 10 }}>Sending code...</Text>
           </View>
         )}
@@ -54,15 +78,15 @@ const Page = () => {
         <View style={styles.list}>
           <View style={styles.listItem}>
             <Text style={styles.listItemText}>United Kingdom</Text>
-            <Ionicons name='chevron-forward' size={20} color={Colors.gray} />
+            <Ionicons name="chevron-forward" size={20} color={Colors.gray} />
           </View>
           <View style={styles.separator} />
 
           <MaskInput
             value={phoneNumber}
-            keyboardType='numeric'
+            keyboardType="numeric"
             autoFocus
-            placeholder='+44'
+            placeholder="+44"
             style={styles.input}
             onChangeText={(masked, unmasked) => {
               setPhoneNumber(masked); // you can use the unmasked value as well
