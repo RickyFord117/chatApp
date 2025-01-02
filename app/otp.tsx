@@ -60,7 +60,25 @@ const Page = () => {
     }
   };
 
-  const trySignIn = async () => {};
+  const trySignIn = async () => {
+    const { supportedFirstFactors } = await signIn!.create({
+      identifier: phoneNumber,
+    });
+
+    const firstPhoneFactor: any = supportedFirstFactors?.find((factor: any) => {
+      return factor.strategy === "phone_code";
+    });
+
+    const { phoneNumberId } = firstPhoneFactor;
+
+    await signIn!.prepareFirstFactor({
+      strategy: "phone_code",
+      phoneNumberId,
+    });
+
+    router.push(`/verify/${phoneNumber}?signIn=true`);
+    setLoading(false);
+  };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
