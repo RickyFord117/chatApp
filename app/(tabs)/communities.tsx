@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const Chats = () => {
+const Communitites = () => {
   return (
     <View>
-      <Text>Chats</Text>
+      <Text>Communitites</Text>
     </View>
   );
 };
 
-export default Chats;
+export default Communitites;
