@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import {
   Ionicons,
   MaterialCommunityIcons,
@@ -9,7 +10,20 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Layout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Tabs>
+      <Tabs
+        screenOptions={{
+          tabBarStyle: {
+            backgroundColor: Colors.background,
+          },
+          tabBarActiveTintColor: Colors.primary,
+          tabBarInactiveBackgroundColor: Colors.background,
+          tabBarActiveBackgroundColor: Colors.background,
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerShadowVisible: false,
+        }}
+      >
         <Tabs.Screen
           name="updates"
           options={{
