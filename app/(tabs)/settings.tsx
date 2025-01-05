@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@clerk/clerk-expo";
@@ -141,6 +147,19 @@ const Settings = () => {
             )}
           />
         </View>
+
+        <TouchableOpacity onPress={() => signOut()}>
+          <Text
+            style={{
+              color: Colors.primary,
+              fontSize: 16,
+              textAlign: "center",
+              paddingVertical: 14,
+            }}
+          >
+            Log Out
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
